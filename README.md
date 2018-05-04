@@ -31,7 +31,7 @@
 
 ### 异常值标注
 下图为iphone端“歌手2018”节目开播3-15天的每小时异常值标注结果，其中上图红色点为*tsoutliers*算法检测出来的异常值， 蓝色曲线为调整之后的VV曲线， 下图为异常值对原时间序列VV值的影响程度。  
-![此处输入图片的描述][4]  
+    ![image](https://user-images.githubusercontent.com/3760475/39611488-99baf358-4f8a-11e8-86c3-0c7cfc017a12.png)
 经过对比测试，经过异常值标注以后的VV训练集预测效果有较明显提升，但该算法速度很慢，因此该类预测变量仅在每日VV预测模型中使用。
 
 ## 使用模型简介
@@ -60,22 +60,12 @@
 |*bsts* |是  | 是* |  较慢 |    否   | 否 | 较快|
 
 ## 预测流程
-![image](https://user-images.githubusercontent.com/3760475/39611488-99baf358-4f8a-11e8-86c3-0c7cfc017a12.png)   
+![image](https://user-images.githubusercontent.com/3760475/39611499-a68f0970-4f8a-11e8-8dc3-b2e85cdb6f46.png)
 ![image](https://user-images.githubusercontent.com/3760475/39611512-bd399532-4f8a-11e8-8c83-e2125b7c5bd8.png)
 
 ## 结果比较
- ![image](https://user-images.githubusercontent.com/3760475/39611499-a68f0970-4f8a-11e8-8dc3-b2e85cdb6f46.png)     
+ ![image](https://user-images.githubusercontent.com/3760475/39611718-7a831856-4f8c-11e8-8f30-b4167b8e7c31.png)
     从测试结果来看， 抽样方法/模型集成方法比模型更重要， iPhone端在TOP 30合集中预测表现最好也最稳定的模型是最简单的、没有使用任何外部预测变量的ETS模型，因为其使用了*MBB*抽样这种模型集成方法(*bagging*)使预测值变得更加平滑和健壮。   
     具体内容请参见[文件](https://github.com/vcbin/R_ts_prediction/blob/master/%E5%90%88%E9%9B%86VV%E9%A2%84%E6%B5%8B%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E.docx) 
 
 标签（空格分隔）： 时间序列 预测模型 forecast R 
-
----
-
-
-  [1]: https://ibb.co/bRBSTn
-  [2]: https://ibb.co/cNgY17
-  [3]: https://ibb.co/kv15ES
-  [4]: https://ibb.co/etfMon
-  [5]: https://pasteboard.co/HjyeLm9.png
-  [6]: https://pasteboard.co/Hjye1l5.png
