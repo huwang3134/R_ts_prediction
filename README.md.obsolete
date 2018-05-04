@@ -1,0 +1,57 @@
+# R语言时间序列模型节目合集每日VV预测
+## 说明
+* 使用模型：ARIMA(R语言auto.arima函数)
+
+* 模型假设： 待预测的时间序列数据是稳态序列(stationary series)， 即其统计量比如均值和方差不随时间变化.
+
+* 模型解释： 模型认为时间序列的值仅与其历史值和历史预测误差有关， 如果有其它外部因素的影响， 可以考虑使用ARIMAX或者ARIMA with regressor模型。有关该模型的详细解释和参数选择，可以参考[杜克大学的相关统计教程](https://people.duke.edu/~rnau/411arim3.htm)
+
+## 预测流程
+![image](/uploads/50a39b1a028239278b3ea851114edcab/image.png)
+
+## BoxCox变换的作用
+  下图可以看出， 通过[BoxCox变换](http://www.personal.psu.edu/asb17/old/sta4853/files/sta4853-14print.pdf)以后， 快乐大本营2017合集的每日VV分布(下图右二)明显更趋向于正态分布了。
+![image](/uploads/709ebd3edd6d1ce7ebd3a497c0615963/image.png)
+
+经过BoxCox变换以后， 原来不可预测的非稳态序列我们来了第二季合集每日VV变得可以预测了
+以下结果均为aPhone端数据， 红色曲线表示真实VV值，蓝色曲线表示预测值， 深灰色区域表示预测值的85%置信区间， 浅灰色区域表示预测值的95%置信区间。
+![image](/uploads/a3e2451b7b5e5a5c8554fdfb023ddb4c/image.png)
+“爸爸去哪儿第五季”合集每日VV的7日平均预测误差从19.95%降至 **4.98**%
+![image](/uploads/a7e3cd1962753e818e96d768b221b352/image.png)
+“宝贝的新朋友”合集每日VV的7日平均预测误差从 70.66%降至 **29.54**%
+![image](/uploads/9368132b918fb1ed485d8bc41a71286d/image.png)
+
+## 预测结果
+### 测试配置
+  * 测试数据集： 7个热门节目合集的aPhone端每日VV数据， 开始时间为节目上线时间，结束时间为节目最后更新日期和昨日日期二者中的较晚一个（测试日期20171229）， 留出最后7天数据作为测试集
+  * 评价指标： [mape(mean absolute percentage error)](https://en.wikipedia.org/wiki/Mean_absolute_percentage_error) 这里为7日平均预测误差
+
+### 测试结果
+最新预测结果： http://wiki.imgo.tv/pages/viewpage.action?pageId=4220602
+
+| 合集名称 | 7日平均预测误差 |
+| -------- | -------- |
+| 猎场   | 12.4%   |
+| 快乐大本营2017   | 7.27%   |
+| 天天向上2017   | 9.26%   |
+| 天天向上2017   | 9.26%   |
+| 我们来了第二季   | 30.09%   |
+| 爸爸去哪儿第五季   | 4.98%   |
+| 羞羞的铁拳   | 9.78%   |
+| 变形记第十四季   | 0.00%   |
+| 宝贝的新朋友   | 29.54%   |
+| 可惜不是你   | 28.00%   |
+
+## 初步结论
+  使用ARIMA模型预测热门合集的每日VV是可行的，在S级节目"快乐大本营", "爸爸去哪儿第五季"上均取得了不错的效果.
+### 模型缺点
+  基于历史数据集进行学习的预测模型对于超出历史数据取值范围的预测都不靠谱, 这也是一个业界难题。
+### 改进方向
+  1. 使用Regression with ARIMA errors模型对影响节目VV的可观测外部因素建模， 例如节假日， 预告片VV等。
+  2. 使用更加复杂的模型尝试对非稳态序列进行建模， 例如RNN.
+
+## 引用
+  1. [ARIMA modelling in R](https://www.otexts.org/fpp/8/7)
+  2. [Introduction to Forecasting with ARIMA in R](https://www.datascience.com/blog/introduction-to-forecasting-with-arima-in-r-learn-data-science-tutorials)
+  3. [Introduction to ARIMA models
+](https://people.duke.edu/~rnau/411arim.htm)
