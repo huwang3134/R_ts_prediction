@@ -1,15 +1,22 @@
-# 时间序列VV预测模型说明
-
+# 时间序列Video Visit(VV)预测模型说明
+## 预测模型的作用
+  * 使用每小时VV模型预测上线3-14日的手机端节目合集的每小时VV。
+  * 使用每天VV模型和每小时VV模型预测上线3周以后的手机端节目合集的每日和每小时VV。  
+    测试结果表明两个预测模型的预测效果可以互补。
+    
 ## 输入
   postgreSQL和MySQL数据库抽取的视频合集每日/每小时VV(Video Visit)数
 
 ## 输出
   
- - 绘图输出data/png  
- - 模型结果汇总data/stats
+ - 绘图输出out/png, out/gif  
+ - 模型结果汇总out/stats
+
+## 测试环境
+  ![image](https://user-images.githubusercontent.com/3760475/39615675-1694fecc-4faa-11e8-8701-8690d88ac4ef.png)
 
 ## 预测变量
-本节主要描述除了VV历史值以外的其它外部预测变量，统计上又称协变量(*covariates*)。本文中使用的模型除了*baggedETS*和*TBATS*模型以外均支持添加外部预测变量。
+本节主要描述除了VV历史值以外的其它外部预测变量，统计上又称协变量(*covariates*)。本文中使用的模型除了*baggedETS*和*TBATS*模型以外均支持添加外部预测变量。  
 不同的预测模型可能使用不同的预测变量组合，因为除了*GAM*和*nnetar*以外的大部分模型都是使用线性回归(*Ordinary Least Squares, OLS*)来拟合外部预测变量，存在预测特征矩阵缺秩的情况，因此需要使用方差膨胀因子(*Variance inflation factor, VIF*)进行矩阵降维处理。
 
 ### 每日/每周 周期性波动
@@ -63,7 +70,30 @@
 ![Arima模型拟合流程](https://user-images.githubusercontent.com/3760475/39611512-bd399532-4f8a-11e8-8c83-e2125b7c5bd8.png)  
 
 ## 结果比较
- ![image](https://user-images.githubusercontent.com/3760475/39611718-7a831856-4f8c-11e8-8f30-b4167b8e7c31.png)  
+  
+### 当期预测效果
+验证方式： [*k-fold Leave-one-out Cross-Validation*](https://robjhyndman.com/hyndsight/crossvalidation/)  
+下面动图为iPhone端"恋爱先生"节目上线2天至28天预测效果演示, 可以看出来各个模型的预测误差从上线第3天的56.7%降至第28天的22.27%.  其中 **洋红色** 为节目每小时真实VV值  
+![image](https://media.giphy.com/media/t9ksI7Ouv2fZZv4Spp/giphy.gif)  
+
+1. 每小时VV预测模型   
+aPhone端TOP 30合集上线3周后7日每 **天** VV预测平均误差33.03%, 中位数19.71%， 测试首日平均预测误差19.88%； iPhone端预测误差平均值20.1%， 中位数13.51%， 测试首日平均预测误差16.63%。  
+
+| 终端    | 上线第22-28天平均误差 |   上线第22天平均误差 |
+| :---: | :---: | :---: |
+| iPhone |  20.1%   | 16.63% |
+| aPhone    | 33.03%    | 19.88% |  
+
+2. 每日VV预测模型  
+aPhone端TOP 30合集9-15天平均预测误差22.75%， 中位数21.01%。 上线3-15天的每 **小时** VV预测平均误差28.46%， 中位数24.65%;  iPhone端上线9-15天预测误差平均值24.84%，中位数24.85%。 上线3-15天预测误差平均值29..73%， 中位数24.31%。  
+
+
+| 终端    | 上线第3-15天平均误差 |    上线第9-15天平均误差 |
+| :---: | :---: | :---: |
+| iPhone |  29.73%  | 24.84% |
+| aPhone    | 28.46%    | 22.75% |  
+
+ ![不同模型iPhone端 TOP 30节目合集5重交叉验证箱型图](https://user-images.githubusercontent.com/3760475/39611718-7a831856-4f8c-11e8-8f30-b4167b8e7c31.png '不同模型iPhone端 TOP 30节目合集5重交叉验证箱型图')  
     从测试结果来看， 抽样方法/模型集成方法比模型更重要， iPhone端在TOP 30合集中预测表现最好也最稳定的模型是最简单的、没有使用任何外部预测变量的ETS模型，因为其使用了*MBB*抽样这种模型集成方法(*bagging*)使预测值变得更加平滑和健壮。   
     具体内容请参见[文件](https://github.com/vcbin/R_ts_prediction/blob/master/%E5%90%88%E9%9B%86VV%E9%A2%84%E6%B5%8B%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E.docx) 
 
